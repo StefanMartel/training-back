@@ -1,27 +1,30 @@
 import * as express from 'express';
 import * as cors from 'cors';
-import {LoginService} from '../domain/services/login/login.service';
-import {LoginMongo} from '../infrastructure/dbb/mongo/mongo-login.service';
-import {LoginOutput} from '../domain/models/output/login-output.model';
-import {ErrorOutput} from '../domain/models/output/error-output.model';
-import {OptionsCors} from "../shared/global-variable";
+import { LoginService } from '../core/services/login.service';
+import { LoginOutput } from '../core/models/output/login-output.model';
+import { ErrorOutput } from '../core/models/output/error-output.model';
+import { OptionsCors } from '../shared/variables/global-variable';
+import { LoginMongo } from '../core/bdd/mongo/mongo-login.service';
+import { TrainingListService } from '../core/services/training-list.service';
+import { TrainingOutput } from '../core/models/output/training-output.model';
 
 var bodyParser = require('body-parser');
 
 class App {
   public express;
-  public logServ : LoginService
-  public loginService : LoginMongo
+  public logServ: LoginService
+  private loginService: LoginMongo
+  private trainingListService: TrainingListService
 
-  constructor () {
-    this.loginService = new LoginMongo()
+  constructor() {
+    this.loginService = new LoginMongo();
     this.logServ = new LoginService(this.loginService);
     this.express = express()
     this.mountRoutes()
   }
 
-  private mountRoutes (): void {
-    const options:cors.CorsOptions = OptionsCors;
+  private mountRoutes(): void {
+    const options: cors.CorsOptions = OptionsCors;
     const router = express.Router();
 
 
@@ -40,12 +43,23 @@ class App {
 
     router.post('/login', (req, res) => {
       this.logServ.logUser(req.body).subscribe(
-          (data: LoginOutput) => {
-            res.json(data);
-          },
-          (error : ErrorOutput) => {
-            res.json(error)
-          }
+        (data: LoginOutput) => {
+          res.json(data);
+        },
+        (error: ErrorOutput) => {
+          res.json(error)
+        }
+      );
+    });
+
+    router.post('/training', (req, res) => {
+      this.trainingListService.addTraining(req.body).subscribe(
+        (data: TrainingOutput) => {
+          res.json(data);
+        },
+        (error: ErrorOutput) => {
+          res.json(error)
+        }
       );
     });
 

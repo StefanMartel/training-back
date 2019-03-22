@@ -1,10 +1,3 @@
-
-export class AppService{
-
+export class AppService {
     connexion;
-
-
-
-
-
 }

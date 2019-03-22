@@ -1,4 +1,4 @@
-import * as supertest from 'supertest'
+import * as supertest from 'supertest';
 import app from './app'
 
 describe('App', () => {
