@@ -47,7 +47,7 @@ class App {
                 this.trainingService.addTraining(req.body).subscribe((data) => {
                     res.status(data.code).send(data);
                 }, (error) => {
-                    res.json(error);
+                    res.status(error.errorCode).send(new error_output_model_1.ErrorOutput(error.errorDescription));
                 });
             }
             else {
@@ -59,7 +59,7 @@ class App {
                 this.trainingService.getTraining(req.params.userLogin).subscribe((data) => {
                     res.json(data);
                 }, (error) => {
-                    res.json(error);
+                    res.status(error.errorCode).send(new error_output_model_1.ErrorOutput(error.errorDescription));
                 });
             }
             else {
@@ -67,11 +67,11 @@ class App {
             }
         });
         router.delete('/api/training/:trainingId/delete', (req, res) => {
-            if (!isNaN(req.params.trainingId)) {
-                this.trainingService.deleteTraining(parseInt(req.params.trainingId)).subscribe((data) => {
+            if (!isNaN(+req.params.trainingId)) {
+                this.trainingService.deleteTraining(+req.params.trainingId).subscribe((data) => {
                     res.status(data.code).send(data);
                 }, (error) => {
-                    res.json(error);
+                    res.status(error.errorCode).send(new error_output_model_1.ErrorOutput(error.errorDescription));
                 });
             }
             else {

@@ -10,7 +10,7 @@ import { AddUpdateOutput } from '../models/output/add-update-output.model';
 import { TrainingService } from '../services/training/training.service';
 import { TrainingDBBMongo } from '../infrastructure/dbb/mongo/mongo-training.service';
 import { TrainingOutput } from '../models/output/training-output.model';
-import { TrainingAddInputModel, isTrainingAddInputModel } from '../models/input/training-add-input.model';
+import { isTrainingAddInputModel } from '../models/input/training-add-input.model';
 
 var bodyParser = require('body-parser');
 
@@ -64,7 +64,7 @@ class App {
               res.status(data.code).send(data);
             },
             (error : ErrorOutput) => {
-              res.json(error)
+              res.status(error.errorCode).send(new ErrorOutput(error.errorDescription));
             }
         );
       }else{
@@ -79,7 +79,7 @@ class App {
               res.json(data);
             },
             (error : ErrorOutput) => {
-              res.json(error)
+              res.status(error.errorCode).send(new ErrorOutput(error.errorDescription));
             }
         );
       }else{
@@ -88,13 +88,13 @@ class App {
     });
 
     router.delete('/api/training/:trainingId/delete', (req: Request, res: Response) => {
-      if(!isNaN(req.params.trainingId) ){
-        this.trainingService.deleteTraining(parseInt(req.params.trainingId)).subscribe(
+      if(!isNaN(+req.params.trainingId) ){
+        this.trainingService.deleteTraining(+req.params.trainingId).subscribe(
           (data: AddUpdateOutput) => {
             res.status(data.code).send(data);
           },
             (error : ErrorOutput) => {
-              res.json(error)
+              res.status(error.errorCode).send(new ErrorOutput(error.errorDescription));
             }
         );
       }else{

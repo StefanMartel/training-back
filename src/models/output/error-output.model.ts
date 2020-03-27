@@ -1,5 +1,5 @@
 export class ErrorOutput{
-    errorCode: string;
+    errorCode: number;
     errorDescription: string;
 
     constructor(error: any){

@@ -25,7 +25,7 @@ export class TrainingService{
     getTraining(idUser: string): Observable<Array<TrainingOutput> | ErrorOutput>{
         return this.trainingDBBService.getTrainings(idUser).pipe(
             map( (data: TrainingList) => {
-                return data.trainings 
+                return data.trainings;
             })
         );
     }
